@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Welcome</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Welcome to TaskFlow</h1>
+            <p>Your personal productivity companion</p>
+        </header>
+        
+        <main class="main-content">
+            <div class="card">
+                <h2>Get Started</h2>
+                <p>Please verify your age to continue</p>
+                
+                <form id="ageVerificationForm" class="form">
+                    <div class="form-group">
+                        <label for="name">Your Name:</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            required 
+                            placeholder="Enter your name"
+                            minlength="2"
+                            maxlength="30"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dob">Date of Birth:</label>
+                        <input 
+                            type="date" 
+                            id="dob" 
+                            name="dob" 
+                            required
+                            max="2015-06-30"
+                        >
+                    </div>
+                    
+                    <div id="error-message" class="error-message"></div>
+                    
+                    <button type="submit" class="btn">Continue to TaskFlow</button>
+                </form>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>TaskFlow &copy; 2025 - A Productivity App</p>
+        </footer>
+    </div>
+    
+    <script src="./js/landing.js"></script>
+</body>
+</html>
