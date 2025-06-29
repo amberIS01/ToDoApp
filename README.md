@@ -1,7 +1,5 @@
 # TaskFlow - Modern Todo Application
 
-![TaskFlow Banner](https://i.imgur.com/placeholder-banner.png)
-
 TaskFlow is a sleek, responsive, and feature-rich Todo application built with vanilla JavaScript, HTML5, and CSS3. It helps you organize your tasks efficiently with a clean and intuitive interface.
 
 ## 🌟 Features
@@ -95,12 +93,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-Amber - [@your_twitter](https://twitter.com/your_twitter)
-
 Project Link: [https://github.com/amberIS01/ToDoApp](https://github.com/amberIS01/ToDoApp)
 
 ---
 
 <div align="center">
-  Made with ❤️ by Amber
+  Made with ❤️ by Sahil Singh
 </div>
