@@ -23,24 +23,11 @@ function initApp() {
     // Set up the UI
     updateUserInfo();
     
-    // Initialize with sample data if needed
-    initializeWithSampleData();
-    
     // Set up event listeners
     setupEventListeners();
     
     // Load and render tasks
     renderAllTasks();
-    
-    // Try to load dummy data from API
-    loadAndStoreDummyTodos().then((newTasks) => {
-        if (newTasks && newTasks.length > 0) {
-            console.log(`Loaded ${newTasks.length} tasks from API`);
-            renderAllTasks();
-        }
-    }).catch(error => {
-        console.error('Error loading dummy data:', error);
-    });
 }
 
 // Start the app when the DOM is fully loaded
@@ -48,23 +35,6 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
 } else {
     initApp();
-}
-
-function initializeApp() {
-    // Set up user info
-    updateUserInfo();
-    
-    // Initialize with sample data if empty
-    initializeWithSampleData();
-    
-    // Load tasks
-    renderAllTasks();
-    
-    // Try to load dummy data from API
-    loadAndStoreDummyTodos().then(() => {
-        // Re-render if we got new tasks
-        renderAllTasks();
-    });
 }
 
 function setupEventListeners() {
@@ -303,8 +273,7 @@ async function handleAddTask(e) {
         };
         
         const newTask = addTask(taskData);
-        renderTask(newTask);
-        updateTaskCounts();
+        renderAllTasks(); // Re-render everything to ensure consistency
         
         // Reset form
         form.reset();
@@ -371,39 +340,41 @@ function handleTaskAction(e) {
     
     if (target.classList.contains('move-todo-btn') || target.closest('.move-todo-btn')) {
         updateTaskStatus(taskId, 'todo');
+        renderAllTasks(); // Immediately update UI
         showNotification('Task moved to To Do', 'success');
+        return;
     } 
     else if (target.classList.contains('complete-btn') || target.closest('.complete-btn')) {
         updateTaskStatus(taskId, 'completed');
+        renderAllTasks(); // Immediately update UI
         showNotification('Task marked as completed', 'success');
+        return;
     }
     else if (target.classList.contains('archive-btn') || target.closest('.archive-btn')) {
         const task = getTaskById(taskId);
         const newStatus = task.status === 'archived' ? 'todo' : 'archived';
         updateTaskStatus(taskId, newStatus);
+        renderAllTasks(); // Immediately update UI
         showNotification(
             newStatus === 'archived' ? 'Task archived' : 'Task restored', 
             'success'
         );
+        return;
     }
     else if (target.classList.contains('delete-btn') || target.closest('.delete-btn')) {
         if (confirm('Are you sure you want to delete this task?')) {
             deleteTask(taskId);
+            renderAllTasks(); // Immediately update UI after delete
             showNotification('Task deleted', 'info');
-        } else {
-            return; // User cancelled
         }
+        return; // Always return after delete action (whether confirmed or cancelled)
     }
     else if (target.classList.contains('task-card') || target.closest('.task-card')) {
         // Open task details modal
         openTaskModal(taskId);
         return;
-    } else {
-        return; // Not a recognized action
     }
-    
-    // Re-render all tasks to reflect changes
-    renderAllTasks();
+    // All actions now handle their own UI updates
 }
 
 function handleSignOut() {
@@ -454,6 +425,8 @@ function renderAllTasks() {
                 <p>No tasks yet. Add one above!</p>
             </div>
         `;
+        // Update task counts to show 0
+        updateTaskCounts();
         return;
     }
     
@@ -476,9 +449,6 @@ function renderTask(task) {
     if (list) {
         list.appendChild(taskElement);
     }
-    
-    // Update task counts
-    updateTaskCounts();
 }
 
 function updateTaskCounts() {

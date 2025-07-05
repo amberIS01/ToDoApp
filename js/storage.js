@@ -1,5 +1,3 @@
-// Storage management for TaskFlow app
-
 const STORAGE_KEYS = {
     TASKS: 'taskflow_tasks',
     USER: 'taskflow_user',
@@ -39,7 +37,24 @@ function getTaskById(id) {
 }
 
 // Add a new task
-function addTask(title) {
+function addTask(taskData) {
+    // Handle both old format (just title) and new format (object)
+    let title, description, dueDate, priority;
+    
+    if (typeof taskData === 'string') {
+        // Old format: just title
+        title = taskData;
+        description = undefined;
+        dueDate = undefined;
+        priority = 'medium';
+    } else {
+        // New format: object with all properties
+        title = taskData.title;
+        description = taskData.description;
+        dueDate = taskData.dueDate;
+        priority = taskData.priority || 'medium';
+    }
+    
     if (!title || !title.trim()) {
         throw new Error('Task title cannot be empty');
     }
@@ -48,6 +63,9 @@ function addTask(title) {
     const newTask = {
         id: generateId(),
         title: title.trim(),
+        description: description?.trim(),
+        dueDate: dueDate || null,
+        priority: ['high', 'medium', 'low'].includes(priority) ? priority : 'medium',
         status: 'todo',
         createdAt: new Date().toISOString(),
         lastModified: new Date().toISOString()
@@ -77,6 +95,7 @@ function updateTaskStatus(taskId, newStatus) {
     
     return tasks[taskIndex];
 }
+
 
 // Delete a task
 function deleteTask(taskId) {
@@ -113,35 +132,19 @@ function clearAppData() {
     localStorage.removeItem(STORAGE_KEYS.LAST_SYNC);
 }
 
-// Initialize app with sample data if empty
-function initializeWithSampleData() {
+// Clear all existing tasks (one-time cleanup)
+function clearAllTasks() {
+    localStorage.removeItem(STORAGE_KEYS.TASKS);
+    localStorage.removeItem(STORAGE_KEYS.LAST_SYNC);
+    console.log('All tasks cleared');
+}
+
+// Initialize app with empty storage
+function initializeEmptyStorage() {
     const tasks = getTasks();
     if (tasks.length === 0) {
-        const sampleTasks = [
-            {
-                id: generateId(),
-                title: 'Welcome to TaskFlow!',
-                status: 'todo',
-                createdAt: new Date().toISOString(),
-                lastModified: new Date().toISOString()
-            },
-            {
-                id: generateId(),
-                title: 'Add your first task',
-                status: 'todo',
-                createdAt: new Date().toISOString(),
-                lastModified: new Date().toISOString()
-            },
-            {
-                id: generateId(),
-                title: 'Mark tasks as complete',
-                status: 'completed',
-                createdAt: new Date(Date.now() - 86400000).toISOString(),
-                lastModified: new Date().toISOString()
-            }
-        ];
-        
-        localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(sampleTasks));
+        // Start with empty task list
+        localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify([]));
         localStorage.setItem(STORAGE_KEYS.LAST_SYNC, new Date().toISOString());
     }
 }

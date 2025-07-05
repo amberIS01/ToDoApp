@@ -186,6 +186,7 @@
                             
                             if (task && task.status !== newStatus) {
                                 updateTaskStatus(taskId, newStatus);
+                                renderAllTasks(); // Update UI immediately after drag and drop
                                 showNotification(`Task moved to ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`, 'success');
                             }
                         }

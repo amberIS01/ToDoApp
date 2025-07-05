@@ -1,3 +1,4 @@
+//age veriffication logic
 // Helper function to show error messages
 function showError(message, element) {
     if (!element) {
